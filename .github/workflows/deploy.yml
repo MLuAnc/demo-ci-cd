@@ -3,7 +3,7 @@ name: Deploy API to AWS EC2
 on:
   push:
     branches:
-      - main  # Cambia según tu rama principal
+      - main
 
 jobs:
   deploy:
