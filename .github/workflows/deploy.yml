@@ -10,16 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🚀 Checkout del código
+      - name: Checkout del código
         uses: actions/checkout@v3
 
-      - name: 🐳 Construir la imagen Docker
+      - name: Construir la imagen Docker
         run: docker build -t express-api .
 
-      - name: 📂 Guardar imagen en un archivo
+      - name: Guardar imagen en un archivo
         run: docker save -o express-api.tar express-api
 
-      - name: 🔑 Copiar imagen a EC2 con SCP
+      - name: Copiar imagen a EC2 con SCP
         env:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
@@ -28,7 +28,7 @@ jobs:
           chmod 600 private_key.pem
           scp -o StrictHostKeyChecking=no -i private_key.pem express-api.tar ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
 
-      - name: 🏃 Ejecutar la API en EC2
+      - name: Ejecutar la API en EC2
         env:
           EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
         run: |
