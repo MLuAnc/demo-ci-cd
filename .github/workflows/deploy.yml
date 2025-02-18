@@ -1,0 +1,40 @@
+name: Deploy API to AWS EC2
+
+on:
+  push:
+    branches:
+      - main  # Cambia según tu rama principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 Checkout del código
+        uses: actions/checkout@v3
+
+      - name: 🐳 Construir la imagen Docker
+        run: docker build -t express-api .
+
+      - name: 📂 Guardar imagen en un archivo
+        run: docker save -o express-api.tar express-api
+
+      - name: 🔑 Copiar imagen a EC2 con SCP
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          scp -o StrictHostKeyChecking=no -i private_key.pem express-api.tar ubuntu@$EC2_PUBLIC_IP:/home/ubuntu/
+
+      - name: 🏃 Ejecutar la API en EC2
+        env:
+          EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@$EC2_PUBLIC_IP << 'EOF'
+            docker load -i express-api.tar
+            docker stop express-api || true
+            docker rm express-api || true
+            docker run -d -p 3000:3000 --name express-api express-api
+          EOF
