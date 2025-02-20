@@ -7,7 +7,7 @@
   "memory": "512",
   "containerDefinitions": [
     {
-      "name": "mi-api-contenedor",
+      "name": "mi-api",
       "image": "123456789012.dkr.ecr.us-east-2.amazonaws.com/mi-api:latest",
       "essential": true,
       "portMappings": [
