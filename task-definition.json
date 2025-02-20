@@ -1,5 +1,6 @@
 {
   "family": "mi-api-tarea",
+  "executionRoleArn": "arn:aws:iam::123456789012:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "256",
@@ -7,7 +8,7 @@
   "containerDefinitions": [
     {
       "name": "mi-api-contenedor",
-      "image": "123456789012.dkr.ecr.us-east-1.amazonaws.com/mi-api:latest",
+      "image": "123456789012.dkr.ecr.us-east-2.amazonaws.com/mi-api:latest",
       "essential": true,
       "portMappings": [
         {
